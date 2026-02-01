@@ -1,0 +1,386 @@
+/**
+ * Speedreader Styles
+ * Dark-mode focused design with monospace font for precise alignment
+ */
+
+/* CSS Variables */
+:root {
+    --bg-primary: #0d1117;
+    --bg-secondary: #161b22;
+    --bg-tertiary: #21262d;
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: #6e7681;
+    --accent-primary: #58a6ff;
+    --accent-highlight: #FF4500;
+    --border-color: #30363d;
+    --success-color: #3fb950;
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Roboto Mono', 'Consolas', monospace;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+}
+
+/* Main Container */
+.container {
+    width: 100%;
+    max-width: 700px;
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+header p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+/* Redicle (Display Box) */
+.redicle-container {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.redicle {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+    background-color: var(--bg-tertiary);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Word Display */
+.word-display {
+    display: flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 2.5rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+.before-orp {
+    text-align: right;
+    width: 150px;
+    color: var(--text-primary);
+}
+
+.orp-char {
+    color: var(--accent-highlight);
+    font-weight: 700;
+    min-width: 1ch;
+    text-align: center;
+}
+
+.after-orp {
+    text-align: left;
+    width: 150px;
+    color: var(--text-primary);
+}
+
+/* Progress Bar */
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.progress-track {
+    flex: 1;
+    height: 6px;
+    background-color: var(--bg-tertiary);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: var(--accent-primary);
+    border-radius: 3px;
+    transition: width 0.1s ease-out;
+}
+
+.progress-text {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    min-width: 40px;
+    text-align: right;
+    font-family: var(--font-mono);
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.controls-row {
+    display: flex;
+    gap: 0.75rem;
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Buttons */
+button {
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0.65rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-primary {
+    background-color: var(--accent-primary);
+    color: var(--bg-primary);
+    min-width: 100px;
+}
+
+.btn-primary:hover {
+    background-color: #79b8ff;
+}
+
+.btn-primary.playing {
+    background-color: var(--success-color);
+}
+
+.btn-secondary {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--border-color);
+}
+
+/* WPM Slider */
+.wpm-control {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+    min-width: 200px;
+}
+
+.wpm-control label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.wpm-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    background-color: var(--bg-tertiary);
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.wpm-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background-color: var(--accent-primary);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.wpm-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+}
+
+.wpm-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background-color: var(--accent-primary);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.wpm-value {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    min-width: 80px;
+    text-align: right;
+}
+
+/* Text Input */
+.input-section {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.input-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.input-header label {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.word-count {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+}
+
+.text-input {
+    width: 100%;
+    height: 150px;
+    padding: 1rem;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    resize: vertical;
+    transition: border-color 0.15s ease;
+}
+
+.text-input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+}
+
+.text-input::placeholder {
+    color: var(--text-muted);
+}
+
+/* Keyboard Shortcuts */
+.shortcuts {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.shortcuts h3 {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.shortcuts ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    list-style: none;
+}
+
+.shortcuts li {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.shortcuts kbd {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    margin-right: 0.25rem;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    body {
+        padding: 1rem 0.75rem;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    .redicle {
+        height: 70px;
+    }
+
+    .word-display {
+        font-size: 1.8rem;
+    }
+
+    .before-orp,
+    .after-orp {
+        width: 100px;
+    }
+
+    .controls {
+        flex-direction: column;
+    }
+
+    .controls-row,
+    .wpm-control {
+        width: 100%;
+    }
+
+    .shortcuts ul {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
