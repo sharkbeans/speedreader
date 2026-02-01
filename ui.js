@@ -17,6 +17,10 @@ class SpeedreaderUI {
         this.playPauseBtn = document.getElementById('play-pause-btn');
         this.resetBtn = document.getElementById('reset-btn');
         this.wordCount = document.getElementById('word-count');
+        this.focusModeToggle = document.getElementById('focus-mode-toggle');
+
+        // Focus mode state
+        this.isFocusMode = false;
 
         // Initialize engine with callbacks
         this.engine = new RSVPEngine(
@@ -60,6 +64,9 @@ class SpeedreaderUI {
         // Reset button
         this.resetBtn.addEventListener('click', () => this.reset());
 
+        // Focus mode toggle
+        this.focusModeToggle.addEventListener('change', () => this.updateFocusMode());
+
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => this.handleKeyboard(e));
     }
@@ -90,6 +97,12 @@ class SpeedreaderUI {
             case 'ArrowDown':
                 e.preventDefault();
                 this.adjustWPM(-CONFIG.WPM_STEP);
+                break;
+            case 'KeyF':
+                if (!e.ctrlKey && !e.metaKey) {
+                    e.preventDefault();
+                    this.toggleFocusMode();
+                }
                 break;
         }
     }
@@ -203,6 +216,22 @@ class SpeedreaderUI {
      */
     onComplete() {
         this.updatePlayPauseButton(false);
+    }
+
+    /**
+     * Toggle focus mode (called by keyboard shortcut)
+     */
+    toggleFocusMode() {
+        this.focusModeToggle.checked = !this.focusModeToggle.checked;
+        this.updateFocusMode();
+    }
+
+    /**
+     * Update focus mode state (called by toggle change)
+     */
+    updateFocusMode() {
+        this.isFocusMode = this.focusModeToggle.checked;
+        document.body.classList.toggle('focus-mode', this.isFocusMode);
     }
 }
 

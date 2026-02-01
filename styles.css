@@ -155,13 +155,12 @@ header p {
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: space-between;
 }
 
 .controls-row {
     display: flex;
     gap: 0.75rem;
-    flex: 1;
-    min-width: 200px;
 }
 
 /* Buttons */
@@ -204,7 +203,8 @@ button {
 .wpm-control {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    justify-content: center;
+    gap: 0.75rem;
     flex: 1;
     min-width: 200px;
 }
@@ -255,6 +255,73 @@ button {
     color: var(--text-primary);
     min-width: 80px;
     text-align: right;
+}
+
+/* Focus Mode Toggle (iOS-style) */
+.focus-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.focus-toggle input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-track {
+    position: relative;
+    width: 44px;
+    height: 26px;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 13px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background-color: var(--text-secondary);
+    border-radius: 50%;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.focus-toggle input:checked + .toggle-track {
+    background-color: var(--accent-primary);
+    border-color: var(--accent-primary);
+}
+
+.focus-toggle input:checked + .toggle-track .toggle-thumb {
+    transform: translateX(18px);
+    background-color: var(--bg-primary);
+}
+
+.focus-toggle:hover .toggle-track {
+    border-color: var(--text-muted);
+}
+
+.focus-toggle input:checked + .toggle-track:hover {
+    border-color: var(--accent-primary);
+}
+
+.toggle-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: color 0.2s ease;
+}
+
+.focus-toggle input:checked ~ .toggle-label {
+    color: var(--text-primary);
 }
 
 /* Text Input */
@@ -347,6 +414,60 @@ button {
     margin-right: 0.25rem;
 }
 
+/* Focus Mode */
+.input-section,
+.shortcuts {
+    transition: opacity 0.3s ease, max-height 0.3s ease, margin 0.3s ease, padding 0.3s ease;
+    overflow: hidden;
+}
+
+body.focus-mode {
+    padding: 1rem;
+}
+
+body.focus-mode .container {
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: calc(100vh - 2rem);
+}
+
+body.focus-mode header {
+    display: none;
+}
+
+body.focus-mode .input-section,
+body.focus-mode .shortcuts {
+    opacity: 0;
+    max-height: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    pointer-events: none;
+}
+
+body.focus-mode .redicle-container {
+    margin-bottom: 1rem;
+}
+
+body.focus-mode .redicle {
+    height: 100px;
+}
+
+body.focus-mode .word-display {
+    font-size: 3rem;
+}
+
+body.focus-mode .before-orp,
+body.focus-mode .after-orp {
+    width: 200px;
+}
+
+body.focus-mode .controls {
+    margin-bottom: 0;
+}
+
 /* Responsive */
 @media (max-width: 600px) {
     body {
@@ -374,13 +495,79 @@ button {
         flex-direction: column;
     }
 
-    .controls-row,
-    .wpm-control {
+    .controls-row {
         width: 100%;
+        justify-content: center;
     }
 
-    .shortcuts ul {
-        flex-direction: column;
-        gap: 0.5rem;
+    .wpm-control {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .focus-toggle {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .shortcuts {
+        display: none;
+    }
+
+    /* Focus mode mobile */
+    body.focus-mode .redicle {
+        height: 80px;
+    }
+
+    body.focus-mode .word-display {
+        font-size: 2rem;
+    }
+
+    body.focus-mode .before-orp,
+    body.focus-mode .after-orp {
+        width: 120px;
+    }
+
+    body.focus-mode .controls {
+        gap: 0.75rem;
+    }
+
+    body.focus-mode .focus-toggle {
+        width: auto;
+    }
+}
+
+/* Focus mode landscape on mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+    body.focus-mode {
+        padding: 0.5rem 1rem;
+    }
+
+    body.focus-mode .container {
+        min-height: calc(100vh - 1rem);
+    }
+
+    body.focus-mode .redicle-container {
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    body.focus-mode .redicle {
+        height: 60px;
+    }
+
+    body.focus-mode .word-display {
+        font-size: 2rem;
+    }
+
+    body.focus-mode .controls {
+        flex-direction: row;
+        gap: 1rem;
+    }
+
+    body.focus-mode .controls-row,
+    body.focus-mode .wpm-control,
+    body.focus-mode .focus-toggle {
+        width: auto;
     }
 }
