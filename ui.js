@@ -18,6 +18,15 @@ class SpeedreaderUI {
         this.resetBtn = document.getElementById('reset-btn');
         this.wordCount = document.getElementById('word-count');
         this.focusModeToggle = document.getElementById('focus-mode-toggle');
+        this.wordDisplay = document.querySelector('.word-display');
+
+        // Settings elements
+        this.settingsPanel = document.getElementById('settings-panel');
+        this.settingsToggle = document.getElementById('settings-toggle');
+        this.fontSelect = document.getElementById('font-select');
+        this.fontSizeSlider = document.getElementById('font-size-slider');
+        this.fontSizeValue = document.getElementById('font-size-value');
+        this.themeSelect = document.getElementById('theme-select');
 
         // Focus mode state
         this.isFocusMode = false;
@@ -36,12 +45,95 @@ class SpeedreaderUI {
      * Initialize the UI
      */
     init() {
+        this.populateFontSelect();
+        this.loadPreferences();
         this.bindEvents();
-        this.updateWPMDisplay(CONFIG.DEFAULT_WPM);
+        this.updateWPMDisplay(this.engine.wpm);
 
         // Load sample text
         this.textInput.value = CONFIG.SAMPLE_TEXT;
         this.loadText();
+    }
+
+    /**
+     * Populate font select dropdown
+     */
+    populateFontSelect() {
+        CONFIG.FONTS.forEach((font, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = font.name;
+            this.fontSelect.appendChild(option);
+        });
+    }
+
+    /**
+     * Load preferences from localStorage
+     */
+    loadPreferences() {
+        const saved = localStorage.getItem(CONFIG.STORAGE_KEY);
+        const prefs = saved ? JSON.parse(saved) : {};
+
+        // WPM
+        const wpm = prefs.wpm || CONFIG.DEFAULT_WPM;
+        this.engine.setWPM(wpm);
+        this.wpmSlider.value = wpm;
+
+        // Font
+        const fontIndex = prefs.fontIndex ?? CONFIG.DEFAULT_FONT;
+        this.fontSelect.value = fontIndex;
+        this.applyFont(fontIndex);
+
+        // Font size
+        const fontSize = prefs.fontSize || CONFIG.DEFAULT_FONT_SIZE;
+        this.fontSizeSlider.value = fontSize;
+        this.applyFontSize(fontSize);
+
+        // Theme
+        const theme = prefs.theme || CONFIG.DEFAULT_THEME;
+        this.themeSelect.value = theme;
+        this.applyTheme(theme);
+    }
+
+    /**
+     * Save preferences to localStorage
+     */
+    savePreferences() {
+        const prefs = {
+            wpm: this.engine.wpm,
+            fontIndex: parseInt(this.fontSelect.value, 10),
+            fontSize: parseInt(this.fontSizeSlider.value, 10),
+            theme: this.themeSelect.value
+        };
+        localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(prefs));
+    }
+
+    /**
+     * Apply font to word display
+     * @param {number} fontIndex
+     */
+    applyFont(fontIndex) {
+        const font = CONFIG.FONTS[fontIndex];
+        if (font) {
+            this.wordDisplay.style.fontFamily = font.value;
+        }
+    }
+
+    /**
+     * Apply font size to word display
+     * @param {number} size
+     */
+    applyFontSize(size) {
+        this.wordDisplay.style.fontSize = `${size}px`;
+        this.fontSizeValue.textContent = `${size}px`;
+    }
+
+    /**
+     * Apply theme
+     * @param {string} theme
+     */
+    applyTheme(theme) {
+        document.body.classList.toggle('light-theme', theme === 'light');
     }
 
     /**
@@ -56,6 +148,7 @@ class SpeedreaderUI {
             const wpm = parseInt(e.target.value, 10);
             this.engine.setWPM(wpm);
             this.updateWPMDisplay(wpm);
+            this.savePreferences();
         });
 
         // Play/Pause button
@@ -66,6 +159,31 @@ class SpeedreaderUI {
 
         // Focus mode toggle
         this.focusModeToggle.addEventListener('change', () => this.updateFocusMode());
+
+        // Settings panel toggle
+        this.settingsToggle.addEventListener('click', () => {
+            this.settingsPanel.classList.toggle('open');
+        });
+
+        // Font select
+        this.fontSelect.addEventListener('change', (e) => {
+            const fontIndex = parseInt(e.target.value, 10);
+            this.applyFont(fontIndex);
+            this.savePreferences();
+        });
+
+        // Font size slider
+        this.fontSizeSlider.addEventListener('input', (e) => {
+            const size = parseInt(e.target.value, 10);
+            this.applyFontSize(size);
+            this.savePreferences();
+        });
+
+        // Theme select
+        this.themeSelect.addEventListener('change', (e) => {
+            this.applyTheme(e.target.value);
+            this.savePreferences();
+        });
 
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => this.handleKeyboard(e));

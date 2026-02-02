@@ -44,14 +44,14 @@ class RSVPEngine {
      */
     calculateDelay(word) {
         // Base delay: 60000ms per minute / WPM
-        const baseDelay = 60000 / this.wpm;
+        let delay = 60000 / this.wpm;
 
         // Check for punctuation at end of word
         if (CONFIG.PUNCTUATION_REGEX.test(word)) {
-            return baseDelay * CONFIG.PUNCTUATION_PAUSE_MULTIPLIER;
+            delay *= CONFIG.PUNCTUATION_PAUSE_MULTIPLIER;
         }
 
-        return baseDelay;
+        return delay;
     }
 
     /**
