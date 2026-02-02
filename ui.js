@@ -18,6 +18,7 @@ class SpeedreaderUI {
         this.resetBtn = document.getElementById('reset-btn');
         this.wordCount = document.getElementById('word-count');
         this.focusModeToggle = document.getElementById('focus-mode-toggle');
+        this.focusOverlay = document.getElementById('focus-overlay');
         this.wordDisplay = document.querySelector('.word-display');
 
         // Settings elements
@@ -348,8 +349,23 @@ class SpeedreaderUI {
      * Update focus mode state (called by toggle change)
      */
     updateFocusMode() {
-        this.isFocusMode = this.focusModeToggle.checked;
+        const entering = this.focusModeToggle.checked;
+        this.isFocusMode = entering;
+
+        // Trigger the vignette animation
+        this.focusOverlay.classList.remove('animating', 'animating-out');
+        // Force reflow to restart animation
+        void this.focusOverlay.offsetWidth;
+        this.focusOverlay.classList.add(entering ? 'animating' : 'animating-out');
+
+        // Apply focus mode class
         document.body.classList.toggle('focus-mode', this.isFocusMode);
+
+        // Clean up animation class after it completes
+        const duration = entering ? 800 : 500;
+        setTimeout(() => {
+            this.focusOverlay.classList.remove('animating', 'animating-out');
+        }, duration);
     }
 }
 
