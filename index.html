@@ -64,6 +64,14 @@
                 <span id="wpm-value" class="wpm-value">300 WPM</span>
             </div>
 
+            <label class="focus-toggle" title="Toggle Loop (L)">
+                <input type="checkbox" id="loop-toggle">
+                <span class="toggle-track">
+                    <span class="toggle-thumb"></span>
+                </span>
+                <span class="toggle-label">Loop</span>
+            </label>
+
             <label class="focus-toggle" title="Toggle Focus Mode (F)">
                 <input type="checkbox" id="focus-mode-toggle">
                 <span class="toggle-track">
@@ -116,6 +124,17 @@
                             <option value="light">Light</option>
                         </select>
                     </div>
+                    <div class="settings-row">
+                        <span class="settings-label">Focus Letter Color</span>
+                        <input type="color" class="settings-color" id="orp-color-picker" value="#FF4500">
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <div class="settings-section-title">Data</div>
+                    <div class="settings-row">
+                        <span class="settings-label">Reset all settings to defaults</span>
+                        <button type="button" class="btn-danger" id="reset-settings-btn">Reset</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -129,6 +148,7 @@
                 <li><kbd>↑</kbd> Increase WPM</li>
                 <li><kbd>↓</kbd> Decrease WPM</li>
                 <li><kbd>F</kbd> Focus Mode</li>
+                <li><kbd>L</kbd> Loop</li>
             </ul>
         </div>
     </div>

@@ -20,6 +20,7 @@ class SpeedreaderUI {
         this.focusModeToggle = document.getElementById('focus-mode-toggle');
         this.focusOverlay = document.getElementById('focus-overlay');
         this.wordDisplay = document.querySelector('.word-display');
+        this.loopToggle = document.getElementById('loop-toggle');
 
         // Settings elements
         this.settingsPanel = document.getElementById('settings-panel');
@@ -28,9 +29,14 @@ class SpeedreaderUI {
         this.fontSizeSlider = document.getElementById('font-size-slider');
         this.fontSizeValue = document.getElementById('font-size-value');
         this.themeSelect = document.getElementById('theme-select');
+        this.orpColorPicker = document.getElementById('orp-color-picker');
+        this.resetSettingsBtn = document.getElementById('reset-settings-btn');
 
         // Focus mode state
         this.isFocusMode = false;
+
+        // Loop state
+        this.isLoopEnabled = false;
 
         // Initialize engine with callbacks
         this.engine = new RSVPEngine(
@@ -94,6 +100,15 @@ class SpeedreaderUI {
         const theme = prefs.theme || CONFIG.DEFAULT_THEME;
         this.themeSelect.value = theme;
         this.applyTheme(theme);
+
+        // Loop
+        this.isLoopEnabled = prefs.loop || false;
+        this.loopToggle.checked = this.isLoopEnabled;
+
+        // ORP Color
+        const orpColor = prefs.orpColor || '#FF4500';
+        this.orpColorPicker.value = orpColor;
+        this.applyOrpColor(orpColor);
     }
 
     /**
@@ -104,7 +119,9 @@ class SpeedreaderUI {
             wpm: this.engine.wpm,
             fontIndex: parseInt(this.fontSelect.value, 10),
             fontSize: parseInt(this.fontSizeSlider.value, 10),
-            theme: this.themeSelect.value
+            theme: this.themeSelect.value,
+            loop: this.isLoopEnabled,
+            orpColor: this.orpColorPicker.value
         };
         localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(prefs));
     }
@@ -138,6 +155,24 @@ class SpeedreaderUI {
     }
 
     /**
+     * Apply ORP (focus letter) color
+     * @param {string} color - Hex color value
+     */
+    applyOrpColor(color) {
+        this.orpChar.style.color = color;
+    }
+
+    /**
+     * Reset all settings to defaults
+     */
+    resetSettings() {
+        if (confirm('Are you sure you want to reset all settings to defaults?')) {
+            localStorage.removeItem(CONFIG.STORAGE_KEY);
+            location.reload();
+        }
+    }
+
+    /**
      * Bind all event listeners
      */
     bindEvents() {
@@ -160,6 +195,12 @@ class SpeedreaderUI {
 
         // Focus mode toggle
         this.focusModeToggle.addEventListener('change', () => this.updateFocusMode());
+
+        // Loop toggle
+        this.loopToggle.addEventListener('change', () => {
+            this.isLoopEnabled = this.loopToggle.checked;
+            this.savePreferences();
+        });
 
         // Settings panel toggle
         this.settingsToggle.addEventListener('click', () => {
@@ -185,6 +226,15 @@ class SpeedreaderUI {
             this.applyTheme(e.target.value);
             this.savePreferences();
         });
+
+        // ORP color picker
+        this.orpColorPicker.addEventListener('input', (e) => {
+            this.applyOrpColor(e.target.value);
+            this.savePreferences();
+        });
+
+        // Reset settings button
+        this.resetSettingsBtn.addEventListener('click', () => this.resetSettings());
 
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => this.handleKeyboard(e));
@@ -221,6 +271,12 @@ class SpeedreaderUI {
                 if (!e.ctrlKey && !e.metaKey) {
                     e.preventDefault();
                     this.toggleFocusMode();
+                }
+                break;
+            case 'KeyL':
+                if (!e.ctrlKey && !e.metaKey) {
+                    e.preventDefault();
+                    this.toggleLoop();
                 }
                 break;
         }
@@ -334,7 +390,22 @@ class SpeedreaderUI {
      * Called when playback completes
      */
     onComplete() {
-        this.updatePlayPauseButton(false);
+        if (this.isLoopEnabled) {
+            this.engine.reset();
+            this.engine.start();
+            this.updatePlayPauseButton(true);
+        } else {
+            this.updatePlayPauseButton(false);
+        }
+    }
+
+    /**
+     * Toggle loop mode (called by keyboard shortcut)
+     */
+    toggleLoop() {
+        this.loopToggle.checked = !this.loopToggle.checked;
+        this.isLoopEnabled = this.loopToggle.checked;
+        this.savePreferences();
     }
 
     /**

@@ -219,6 +219,19 @@ button {
     background-color: var(--border-color);
 }
 
+.btn-danger {
+    background-color: transparent;
+    color: var(--accent-highlight);
+    border: 1px solid var(--accent-highlight);
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+}
+
+.btn-danger:hover {
+    background-color: var(--accent-highlight);
+    color: var(--bg-primary);
+}
+
 /* WPM Slider */
 .wpm-control {
     display: flex;
@@ -583,6 +596,37 @@ button {
     text-align: right;
 }
 
+.settings-color {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 40px;
+    height: 28px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: transparent;
+    padding: 2px;
+}
+
+.settings-color::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.settings-color::-webkit-color-swatch {
+    border: none;
+    border-radius: 4px;
+}
+
+.settings-color::-moz-color-swatch {
+    border: none;
+    border-radius: 4px;
+}
+
+.settings-color:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+}
+
 /* Focus Mode */
 
 /* Focus Transition Overlay - Vignette Animation */
@@ -745,6 +789,23 @@ body.focus-mode .controls {
 }
 
 body.focus-mode .btn-primary.playing {
+    background-color: var(--text-secondary);
+}
+
+body.focus-mode .progress-bar {
+    background-color: var(--text-muted);
+}
+
+body.focus-mode .focus-toggle input:checked + .toggle-track {
+    background-color: var(--text-secondary);
+    border-color: var(--text-secondary);
+}
+
+body.focus-mode .wpm-slider::-webkit-slider-thumb {
+    background-color: var(--text-secondary);
+}
+
+body.focus-mode .wpm-slider::-moz-range-thumb {
     background-color: var(--text-secondary);
 }
 
